@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Название проекта: что это одним предложением</title>
+<meta name="description" content="Замените описанием из DESIGN.md.">
+<meta name="theme-color" content="#0B0D10">
+<!--
+  ЧЕСТНЫЙ КАРКАС (antislop). Здесь нет выдуманных клиентов, отзывов, цифр, тарифов и FAQ:
+  такие блоки добавляются только когда есть реальные данные (R-17, R-18, R-28, R-36, R-38).
+  Весь текст ниже образцовый: заменить на реальный из DESIGN.md. Меню ведёт только на существующие секции (R-24).
+  Тёмная тема здесь для примера; причина выбора пишется в DESIGN.md (R-21).
+  Движение: каскад в герое + шейдерный фон; больше ничего не двигается (MOTION 2, R-19).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .skip { position: absolute; left: var(--s-4); top: -100px; z-index: 50; padding: var(--s-3) var(--s-4); background: var(--primary); color: var(--on-primary); border-radius: var(--radius-s); }
+  .skip:focus { top: var(--s-3); }
+
+  /* шапка: ссылки видны на любой ширине, на телефоне переносятся под логотип */
+  .nav { position: sticky; top: 0; z-index: 20; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .nav__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-6); padding-block: var(--s-3); }
+  .logo { font: 800 1.25rem / 1 var(--font-display); letter-spacing: -.03em; text-decoration: none; }
+  .nav__links { display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-5); margin-left: auto; }
+  .nav__links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); text-decoration: none; font-size: var(--step--1); font-weight: 500; }
+  @media (hover: hover) { .nav__links a:hover { color: var(--text); } }
+  @media (max-width: 559px) { .nav__links { margin-left: 0; width: 100%; } }
+
+  /* герой */
+  .hero { position: relative; isolation: isolate; overflow: clip; padding-block: clamp(64px, 11vw, 160px) clamp(56px, 9vw, 128px); }
+  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; }
+  .hero canvas.no-webgl { background: radial-gradient(60% 60% at 50% 30%, color-mix(in srgb, var(--primary) 16%, var(--bg)), var(--bg)); }
+  .hero__inner { display: grid; gap: var(--s-6); max-width: 880px; }
+  .hero h1 { font-size: var(--step-5); letter-spacing: -.04em; line-height: 1; }
+  .hero h1 em { font-style: normal; color: var(--primary); }
+  .hero__lead { font-size: var(--step-1); color: var(--muted); max-width: 38ch; hyphens: manual; }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+
+  /* секция «Главное»: асимметрия, одна главная вещь и перечень остального (R-14) */
+  .split { display: grid; gap: var(--s-7); }
+  @media (min-width: 900px) { .split { grid-template-columns: 5fr 7fr; gap: var(--s-9); align-items: start; } .split__head { position: sticky; top: 96px; } }
+  .split__head p { margin-top: var(--s-4); color: var(--muted); max-width: 36ch; }
+  .flagship { display: grid; gap: var(--s-5); }
+  .shot { display: grid; place-items: center; min-height: 280px; padding: var(--s-6); text-align: center; color: var(--muted); font-size: var(--step--1);
+          border: 1px dashed var(--muted); border-radius: var(--radius); background: var(--surface); }
+  .list { display: grid; margin-top: var(--s-7); }
+  .list > div { display: grid; gap: var(--s-2); padding-block: var(--s-5); border-top: 1px solid var(--border); }
+  .list dt { font-weight: 600; }
+  .list dd { margin: 0; color: var(--muted); max-width: 54ch; }
+  @media (min-width: 700px) { .list > div { grid-template-columns: 1fr 2fr; gap: var(--s-6); } }
+
+  /* секция «Как устроено»: плотный перечень, другая композиция */
+  .how { background: var(--surface); border-block: 1px solid var(--border); }
+  .how ol { counter-reset: item; margin: var(--s-7) 0 0; padding: 0; list-style: none; display: grid; gap: var(--s-5); max-width: 760px; }
+  .how li { display: grid; grid-template-columns: 3ch 1fr; gap: var(--s-4); }
+  .how li::before { content: counter(item) "."; counter-increment: item; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .how p { color: var(--muted); }
+
+  /* условия и связь */
+  .terms { display: grid; gap: var(--s-5); max-width: 640px; }
+  .terms .price { font: 800 var(--step-3) / 1 var(--font-display); letter-spacing: -.04em; }
+  .terms p { color: var(--muted); }
+  .contact { display: grid; gap: var(--s-5); justify-items: start; max-width: 720px; }
+  .foot { border-top: 1px solid var(--border); padding-block: var(--s-6); color: var(--muted); font-size: var(--step--1); }
+  .foot__row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-3) var(--s-6); }
+
+  /* появление: только каскад героя (порядок чтения), без анимации остального */
+  .hero [data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); transition-delay: calc(var(--i, 0) * 70ms); }
+  .hero [data-reveal].is-in { opacity: 1; transform: none; }
+</style>
+<noscript><style>.hero [data-reveal]{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+<a class="skip" href="#main">К содержимому</a>
+
+<header class="nav">
+  <div class="container nav__row">
+    <a class="logo" href="#top" aria-label="[ЛОГОТИП] на главную">[ЛОГОТИП]</a>
+    <nav class="nav__links" aria-label="Основная навигация">
+      <a href="#what">Главное</a><a href="#how">Как устроено</a><a href="#terms">Условия</a><a href="#contact">Связаться</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="h1">
+    <canvas id="bg" aria-hidden="true"></canvas>
+    <div class="container hero__inner">
+      <h1 id="h1" data-reveal>Опишите результат, который <em>получит человек</em></h1>
+      <p class="hero__lead" data-reveal style="--i:1">Одно-два предложения о том, как это работает и для кого. Без прилагательных, с конкретикой.</p>
+      <div class="hero__actions" data-reveal style="--i:2">
+        <a class="btn btn--primary" href="#contact">Написать нам</a>
+        <a class="btn btn--ghost" href="#how">Как это устроено</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="what" aria-labelledby="h-what">
+    <div class="container split">
+      <div class="split__head">
+        <h2 id="h-what">Главное</h2>
+        <p>Здесь самое важное о продукте. Одна главная возможность крупно, остальное списком: не всё достойно карточки.</p>
+      </div>
+      <div>
+        <div class="flagship">
+          <h3>Главная возможность</h3>
+          <p class="muted">Что именно она делает и чем отличается. Показывай настоящий интерфейс продукта, а не абстракцию.</p>
+          <div class="shot" role="img" aria-label="Место для скриншота продукта">[СКРИНШОТ ПРОДУКТА]<br>вставить реальный экран</div>
+        </div>
+        <dl class="list">
+          <div><dt>Вторая возможность</dt><dd>Одно предложение о пользе для человека.</dd></div>
+          <div><dt>Третья возможность</dt><dd>Одно предложение о пользе для человека.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section how" id="how" aria-labelledby="h-how">
+    <div class="container">
+      <h2 id="h-how">Как это устроено</h2>
+      <!-- число шагов по реальному процессу, а не «всегда три» (R-05) -->
+      <ol>
+        <li><div><h3>Первый шаг как он есть</h3><p>Что делает человек и что происходит дальше.</p></div></li>
+        <li><div><h3>Второй шаг</h3><p>Опиши настоящий процесс, пусть шагов будет два или пять.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="terms" aria-labelledby="h-terms">
+    <div class="container terms">
+      <h2 id="h-terms">Условия</h2>
+      <div class="price">[ЦЕНА или «бесплатно»]</div>
+      <p>[РЕАЛЬНЫЕ УСЛОВИЯ: что входит, как оплатить, как отказаться]. Тарифы добавляются столько, сколько есть на самом деле.</p>
+    </div>
+  </section>
+
+  <section class="section" id="contact" aria-labelledby="h-contact" style="padding-top:0">
+    <div class="container contact">
+      <h2 id="h-contact">Связаться</h2>
+      <p class="muted">Куда писать и когда ответим. Формы нет, пока нет места, куда данные уйдут (R-26).</p>
+      <!-- TODO: заменить owner@example.com на реальную почту владельца -->
+      <a class="btn btn--primary" href="mailto:owner@example.com">[ПОЧТА ВЛАДЕЛЬЦА]</a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="container foot__row">
+    <span>[НАЗВАНИЕ], [ГОД]</span>
+    <!-- Политика конфиденциальности и оферта: добавить ссылки, когда страницы существуют и собираются данные -->
+    <a href="#top">Наверх</a>
+  </div>
+</footer>
+
+<script src="shader-bg.js"></script>
+<script>
+  initShaderBg(document.getElementById('bg'));
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.hero [data-reveal]').forEach(function (el) { io.observe(el); });
+</script>
+</body>
+</html>
